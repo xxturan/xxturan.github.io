@@ -70,47 +70,57 @@
         function checkLogin(event) {
             event.preventDefault();
 
-            // Fetch entered ID, password, and user's IP (client-side)
+            // Fetch entered ID and password
             const enteredID = document.getElementById('id').value;
             const enteredPassword = document.getElementById('password').value;
 
             console.log('Entered ID:', enteredID);
             console.log('Entered Password:', enteredPassword);
 
-            // Fetch user's IP using a third-party service (replace with your own method if needed)
-            fetch('https://api64.ipify.org?format=json')
-                .then(response => response.json())
-                .then(data => {
-                    const userIP = data.ip;
-                    console.log('User IP:', userIP);
-
-                    // Perform the login check
-                    checkCredentials(enteredID, enteredPassword, userIP);
-                })
-                .catch(error => console.error('Error fetching IP:', error));
-        }
-
-        function checkCredentials(enteredID, enteredPassword, userIP) {
-            // Fetch data from the users.json file (replace with your own method or backend logic)
+            // Fetch user data from users.json
             fetch('users.json')
                 .then(response => response.json())
                 .then(userData => {
                     console.log('Fetched User Data:', userData);
 
                     // Check each user in the array
-                    for (const user of userData.users) {
-                        if (user.id == Number(enteredID) && user.pass === enteredPassword && user.ip === userIP) {
-                            alert('Login successful! Redirecting');
-                            window.location.href = 'main2.html';
-                            return; // Stop further checks if a match is found
-                        }
-                    }
+                    const matchingUser = userData.users.find(user => user.id == enteredID && user.pass === enteredPassword);
 
-                    alert('Invalid credentials. Please try again.');
+                    if (matchingUser) {
+                        console.log('User Found:', matchingUser);
+
+                        // Fetch user's current IP using a third-party service
+                        fetch('https://api64.ipify.org/?format=json')
+                            .then(response => response.json())
+                            .then(data => {
+                                const userIP = data.ip;
+                                console.log('User IP:', userIP);
+
+                                // Fetch IP list from ip.json
+                                fetch('ip.json')
+                                    .then(response => response.json())
+                                    .then(ipData => {
+                                        console.log('Fetched IP Data:', ipData);
+
+                                        // Check if user's IP exists in the ip.json file
+                                        const ipList = ipData.ipList;
+
+                                        if (ipList.includes(userIP)) {
+                                            alert('Login successful! Redirecting');
+                                            window.location.href = 'main2.html';
+                                        } else {
+                                            alert('Invalid IP. Please try again.');
+                                        }
+                                    })
+                                    .catch(error => console.error('Error fetching IP data:', error));
+                            })
+                            .catch(error => console.error('Error fetching current IP:', error));
+                    } else {
+                        alert('Invalid credentials. Please try again.');
+                    }
                 })
                 .catch(error => console.error('Error fetching user data:', error));
         }
-
     </script>
 </body>
 </html>
