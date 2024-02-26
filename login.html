@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Futuristic Login</title>
+    <title>Dushtami Login</title>
     <style>
         body {
             background-color: #0e0e0e;
@@ -53,6 +53,11 @@
             border-radius: 5px;
             cursor: pointer;
         }
+
+        #error-message {
+            color: #ff0000;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -65,18 +70,66 @@
         <input type="password" id="password" class="inputField" placeholder="Enter your password">
 
         <button id="submitButton" onclick="sendLoginRequest()">Login</button>
+
+        <div id="error-message"></div>
     </div>
 
-    <script>
-        function sendLoginRequest() {
-            const ID = document.getElementById('ID').value;
-            const password = document.getElementById('password').value;
+<script>
+    async function sendLoginRequest() {
+        const ID = document.getElementById('ID').value;
+        const password = document.getElementById('password').value;
 
-            // This is where you would typically send the login request to the specified API
-            // using AJAX or fetch API. Due to security reasons, this example does not include
-            // the actual request to the API.
-            console.log(`Sending login request for ID: ${ID}, Password: ${password}`);
+        try {
+            const response = await fetch('https://api.ois.edu.bd/api/v1/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Host': 'api.ois.edu.bd',
+                    'Content-Length': '101',
+                    'Sec-Ch-Ua': '"Not_A Brand";v="8", "Chromium";v="120"',
+                    'Accept': 'application/json, text/plain, */*',
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Sec-Ch-Ua-Mobile': '?0',
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.6099.199 Safari/537.36',
+                    'Sec-Ch-Ua-Platform': '"Linux"',
+                    'Origin': 'https://ems.ois.edu.bd',
+                    'Sec-Fetch-Site': 'same-site',
+                    'Sec-Fetch-Mode': 'cors',
+                    'Sec-Fetch-Dest': 'empty',
+                    'Referer': 'https://ems.ois.edu.bd/',
+                    'Accept-Encoding': 'gzip, deflate, br',
+                    'Accept-Language': 'en-US,en;q=0.9',
+                    'Priority': 'u=1, i',
+                    'Connection': 'close'
+                },
+                body: JSON.stringify({
+                    user_username: ID,
+                    password: password,
+                    ip_address: '192.168.0.1',
+                    remember_me: false
+                })
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+
+                if (data.status) {
+                    // Redirect to main.html
+                    window.location.href = 'main.html';
+                } else {
+                    alert('Login failed. Please check your credentials and try again.');
+                }
+            } else if (response.status === 404) {
+                alert('User not found. Please check your credentials and try again.');
+            } else {
+                alert('An error occurred. Please try again later.');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred. Please try again later.');
         }
-    </script>
+    }
+</script>
+
 </body>
 </html>
