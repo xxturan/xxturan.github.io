@@ -100,7 +100,7 @@
                     // Check each user in the array
                     for (const user of userData.users) {
                         if (user.id == Number(enteredID) && user.pass === enteredPassword && user.ip === userIP) {
-                            alert('Login successful! Redirecting to main2.html');
+                            alert('Login successful! Redirecting');
                             window.location.href = 'main2.html';
                             return; // Stop further checks if a match is found
                         }
