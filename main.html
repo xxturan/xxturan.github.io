@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cute Neon Pink Login</title>
+    <style>
+        body {
+            background-color: #000;
+            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        #login-container {
+            background-color: #ff4d94; /* Neon Pink */
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #fff;
+            color: #ff4d94; /* Neon Pink */
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="login-container">
+        <label for="id">ID:</label>
+        <input type="text" id="id" placeholder="Enter your ID">
+
+        <label for="pass">Password:</label>
+        <input type="password" id="pass" placeholder="Enter your password">
+
+        <button onclick="checkLogin()">Login</button>
+    </div>
+
+    <script>
+        function checkLogin() {
+            const enteredID = document.getElementById('id').value;
+            const enteredPass = document.getElementById('pass').value;
+
+            // Simulating a server-side check by reading files
+            fetch('id.txt')
+                .then(response => response.text())
+                .then(idData => {
+                    fetch('pass.txt')
+                        .then(response => response.text())
+                        .then(passData => {
+                            fetch('ip.txt')
+                                .then(response => response.text())
+                                .then(ipData => {
+                                    const validID = idData.trim();
+                                    const validPass = passData.trim();
+                                    const validIP = ipData.trim();
+
+                                    if (enteredID === validID && enteredPass === validPass) {
+                                        // Simulate IP check
+                                        const userIP = '127.0.0.1'; // Replace with actual user IP
+                                        if (validIP === userIP) {
+                                            window.location.href = 'main2.html';
+                                        } else {
+                                            alert('Invalid IP address');
+                                        }
+                                    } else {
+                                        alert('Invalid ID or password');
+                                    }
+                                });
+                        });
+                });
+        }
+    </script>
+</body>
+</html>
