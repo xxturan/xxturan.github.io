@@ -1,9 +1,13 @@
+Certainly! To enhance the user experience, we can add a loading spinner after the user clicks the login button. I'll modify the code to include a loading spinner, giving feedback to the user that the login process is ongoing.
+
+html
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dushtami Login</title>
+    <title>Futuristic Login</title>
     <style>
         body {
             background-color: #0e0e0e;
@@ -24,6 +28,7 @@
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
             text-align: center;
+            position: relative;
         }
 
         #title {
@@ -54,9 +59,12 @@
             cursor: pointer;
         }
 
-        #error-message {
-            color: #ff0000;
-            margin-top: 10px;
+        #loading-spinner {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: none;
         }
     </style>
 </head>
@@ -71,7 +79,10 @@
 
         <button id="submitButton" onclick="sendLoginRequest()">Login</button>
 
-        <div id="error-message"></div>
+        <div id="loading-spinner">
+            <!-- You can replace this with an actual loading spinner or animation -->
+            Loading...
+        </div>
     </div>
 
 <script>
