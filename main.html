@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -54,8 +55,14 @@
         button:hover {
             background-color: #ff007f;
         }
+
+        #error-container {
+            color: #ff0000;
+            margin-top: 10px;
+        }
     </style>
 </head>
+
 <body>
     <div class="login-container">
         <h2>Login</h2>
@@ -64,9 +71,15 @@
             <input type="password" id="password" placeholder="Password" required>
             <button type="submit">Login</button>
         </form>
+        <div id="error-container"></div>
     </div>
 
     <script>
+        function displayErrorMessage(message) {
+            const errorContainer = document.getElementById('error-container');
+            errorContainer.innerHTML = message;
+        }
+
         function checkLogin(event) {
             event.preventDefault();
 
@@ -74,53 +87,44 @@
             const enteredID = document.getElementById('id').value;
             const enteredPassword = document.getElementById('password').value;
 
-            console.log('Entered ID:', enteredID);
-            console.log('Entered Password:', enteredPassword);
-
             // Fetch user data from users.json
             fetch('users.json')
                 .then(response => response.json())
                 .then(userData => {
-                    console.log('Fetched User Data:', userData);
-
                     // Check each user in the array
                     const matchingUser = userData.users.find(user => user.id == enteredID && user.pass === enteredPassword);
 
                     if (matchingUser) {
-                        console.log('User Found:', matchingUser);
-
                         // Fetch user's current IP using a third-party service
                         fetch('https://api64.ipify.org/?format=json')
                             .then(response => response.json())
                             .then(data => {
                                 const userIP = data.ip;
-                                console.log('User IP:', userIP);
 
                                 // Fetch IP list from ip.json
                                 fetch('ip.json')
                                     .then(response => response.json())
                                     .then(ipData => {
-                                        console.log('Fetched IP Data:', ipData);
-
                                         // Check if user's IP exists in the ip.json file
                                         const ipList = ipData.ipList;
 
                                         if (ipList.includes(userIP)) {
-                                            alert('Login successful! Redirecting');
+                                            // Redirect to main2.html
                                             window.location.href = 'main2.html';
                                         } else {
-                                            alert('Invalid IP. Please try again.');
+                                            displayErrorMessage('Invalid IP. Please try again.');
                                         }
                                     })
                                     .catch(error => console.error('Error fetching IP data:', error));
                             })
                             .catch(error => console.error('Error fetching current IP:', error));
                     } else {
-                        alert('Invalid credentials. Please try again.');
+                        displayErrorMessage('Invalid credentials. Please try again.');
                     }
                 })
                 .catch(error => console.error('Error fetching user data:', error));
         }
     </script>
 </body>
+
 </html>
